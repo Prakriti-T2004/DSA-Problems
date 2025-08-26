@@ -1,0 +1,13 @@
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int missN = 0;
+        for(int i=0; i<=n; i++){
+            missN ^= i;
+        }
+        for(int i=0; i<n; i++){
+            missN ^= nums[i];
+        }
+        return missN;
+    }
+}
