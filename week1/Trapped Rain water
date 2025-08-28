@@ -1,0 +1,44 @@
+class Solution {
+
+    //Approach 1: Brute force 
+
+    public int trap1(int[] height) {
+        int n = height.length;
+        int water = 0;
+        for(int i=0; i<n; i++){
+            int leftmax = 0;
+            int rightmax = 0;
+            for(int j=0; j<=i; j++){
+                leftmax = Math.max(leftmax, height[j]);
+            }
+            for(int j=i; j<n; j++){
+                rightmax = Math.max(rightmax, height[j]);
+            }
+            water += Math.min(leftmax, rightmax) - height[i];
+        }
+        return water;
+    }
+
+    //Approach 2: Optimal Solution
+
+    public int trap(int[] height) {
+        int n = height.length;
+        int leftMax = 0;
+        int rightMax = 0;
+        int l = 0;
+        int r = n-1;
+        int ans = 0;
+        while(l<r){
+            leftMax = Math.max(leftMax, height[l]);
+            rightMax = Math.max(rightMax, height[r]);
+            if(leftMax < rightMax){
+                ans = ans + leftMax - height[l];
+                l++;
+            }else{
+                ans = ans + rightMax - height[r];
+                r--;
+            }
+        }
+        return ans;
+    }
+}
