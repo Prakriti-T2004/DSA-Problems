@@ -1,0 +1,28 @@
+lass Solution {
+    public String reverseVowels(String s) {
+        int n = s.length();
+        char[] str = s.toCharArray();
+        int left = 0;
+        int right = s.length()-1;
+        while(left < right){
+            if(!check(str[left])){
+                left++;
+            }
+            else if(!check(str[right])){
+                right--;
+            }
+            else{
+                char temp = str[left];
+                str[left] = str[right];
+                str[right] = temp;
+                left++;
+                right--;
+            }
+        }
+        return String.valueOf(str);
+    }
+    public boolean check(char c){
+        return "aeiouAEIOU".indexOf(c) != -1;
+
+    }
+}
