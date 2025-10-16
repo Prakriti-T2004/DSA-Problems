@@ -1,0 +1,26 @@
+# Balanced Binary Tree
+
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        int ans = height(root);
+        if(ans == -1){
+            return false;
+        }
+        return true;
+    }
+    public int height(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        //Post order traversal
+        int leftH = height(root.left);
+        int rightH = height(root.right);
+        if(leftH == -1 || rightH == -1){
+            return -1;
+        }
+        if(Math.abs(leftH - rightH) > 1){
+            return -1;
+        }
+        return 1 + Math.max(leftH, rightH);
+    }
+}
