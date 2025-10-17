@@ -1,0 +1,41 @@
+# Maximum Width of a binary Tree
+
+class Pair{
+    TreeNode root;
+    int index;
+    public Pair(TreeNode root, int index){
+        this.root = root;
+        this.index = index;
+    }
+}
+class Solution {
+    int width;
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<Pair> Q = new LinkedList<>();
+        Q.offer(new Pair(root, 0));
+
+        int maxWidth = 0;
+
+        while(!Q.isEmpty()){
+            int left = Q.peek().index;
+            int right = ((LinkedList<Pair>) Q).getLast().index;
+            maxWidth = Math.max(maxWidth, right-left+1);
+
+            int n = Q.size();
+
+            while(n-->0){
+                Pair p = Q.poll();
+                TreeNode curr = p.root;
+                int idx = p.index;
+
+                if(curr.left != null){
+                    Q.offer(new Pair(curr.left, 2*idx+1));
+                }
+                if(curr.right != null){
+                    Q.offer(new Pair(curr.right, 2*idx+2));
+                }
+            }
+        }
+        return maxWidth;
+    }
+}
