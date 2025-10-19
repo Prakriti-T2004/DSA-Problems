@@ -1,0 +1,16 @@
+class Solution {
+    public int missingMultiple(int[] nums, int k) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int ans = k;
+        for(int num : nums){
+            while(num > ans){
+                return ans;
+            }
+            if(num == ans){
+                ans += k;
+            }
+        }
+        return ans;
+    }
+}
