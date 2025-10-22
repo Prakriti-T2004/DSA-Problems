@@ -1,0 +1,30 @@
+# Binary tree level order traversal 2 / reverse level order traversal
+
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null){
+            return result;
+        }
+        Queue<TreeNode> Q = new LinkedList<>();
+        Q.offer(root);
+
+        while(!Q.isEmpty()){
+            int size = Q.size();
+            List<Integer> li = new ArrayList<>();
+            for(int i=0; i<size; i++){
+                TreeNode temp = Q.remove();
+                if(temp.left != null){
+                    Q.offer(temp.left);
+                }
+                if(temp.right != null){
+                    Q.offer(temp.right);
+                }
+                li.add(temp.val);
+            }
+            result.add(li);
+        }
+        Collections.reverse(result);
+        return result;
+    }
+}
