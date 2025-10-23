@@ -1,0 +1,24 @@
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        return buildBST(head, null);
+    }
+
+    public TreeNode buildBST(ListNode head, ListNode tail){
+        if(head == tail){
+            return null;
+        }
+        ListNode fast = head;
+        ListNode slow = head;
+
+        while(fast != tail && fast.next != tail){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        TreeNode root = new TreeNode(slow.val);
+        root.left = buildBST(head, slow);
+        root.right = buildBST(slow.next, tail);
+
+        return root;
+    }
+}
