@@ -1,0 +1,37 @@
+# Relative ranks
+
+class Solution {
+    public String[] findRelativeRanks(int[] score) {
+        int n = score.length;
+        String[] result = new String[n];
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            map.put(i, score[i]);
+        }
+
+        // Convert map to list of entries
+        List<Map.Entry<Integer, Integer>> li = new ArrayList<>(map.entrySet());
+
+        // Sort by frequency in descending order
+
+        li.sort((a, b) -> b.getValue() - a.getValue());
+
+        for(int rank=0; rank<li.size(); rank++){
+            int idx = li.get(rank).getKey();
+            if(rank == 0){
+                result[idx] = "Gold Medal";
+            }
+            else if(rank == 1){
+                result[idx] = "Silver Medal";
+            }
+            else if(rank == 2){
+                result[idx] = "Bronze Medal";
+            }
+            else{
+                result[idx] = String.valueOf(rank + 1);
+            }
+        }
+        return result;
+    }
+}
