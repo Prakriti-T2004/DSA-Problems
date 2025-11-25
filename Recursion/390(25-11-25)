@@ -1,0 +1,19 @@
+# Elimination Game
+lass Solution {
+    public int lastRemaining(int n) {
+        int head = 1;
+        int diff = 1;
+        int size = n;
+        boolean lToR = true;
+        return helper(head, diff, size, lToR);
+    }
+    public int helper(int head, int diff, int size, boolean lToR){
+        if(size == 1){
+            return head;
+        }
+        if(lToR || size % 2 == 1){
+            head = head + diff;
+        }
+        return helper(head, diff*2, size/2, !lToR);
+    }
+}
