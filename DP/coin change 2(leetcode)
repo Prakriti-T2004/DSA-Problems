@@ -1,0 +1,83 @@
+class Solution {
+    //Recursion
+    public int change1(int amount, int[] coins) {
+        int n = coins.length;
+        return solveRec(n-1, amount, coins);  
+    }
+    public int solveRec(int idx, int amount, int[] coins){
+        if(amount == 0){
+            return 1;
+        }
+        if(idx == 0){
+            if(amount % coins[0] == 0){
+                return 1;
+            }
+            else{
+                return 0;
+            }
+        }
+        int notTake = solveRec(idx-1, amount, coins);
+        int take = 0;
+        if(coins[idx] <= amount){
+            take = solveRec(idx, amount-coins[idx], coins);
+        }
+        return take + notTake;
+    }
+
+    //Memoization
+    public int change2(int amount, int[] coins) {
+        int n = coins.length;
+        Integer[][] dp = new Integer[n][amount+1];
+        return solveMem(n-1, amount, coins, dp);  
+    }
+    public int solveMem(int index, int amount, int[] coins, Integer[][] dp){
+        if(amount == 0){
+            return 1;
+        }
+        if(index == 0){
+            if(amount % coins[index] == 0){
+                return 1;
+            }
+            else{
+                return 0;
+            }
+        }
+        if(dp[index][amount] != null){
+            return dp[index][amount];
+        }
+        int notTake = solveMem(index-1, amount, coins, dp);
+        int take = 0;
+        if(coins[index] <= amount){
+            take = solveMem(index, amount-coins[index], coins, dp);
+        }
+        return dp[index][amount] = take + notTake;
+    }
+
+    //Tabulation
+
+    public int change(int amount, int[] coins) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount+1]; 
+
+        for(int j=0; j<=amount; j++){
+            if(j % coins[0] == 0){
+                dp[0][j] = 1;
+            }
+            else{
+                dp[0][j] = 0;
+            }
+        }
+        for(int i=1; i<n; i++){
+            for(int j=0; j<=amount; j++){
+                int notTake = dp[i-1][j];
+                int take = 0;
+                if(j >= coins[i]){
+                    take = dp[i][j-coins[i]];
+                }
+                dp[i][j] = take + notTake;
+            }
+        }
+        return dp[n-1][amount];
+    }
+
+}
