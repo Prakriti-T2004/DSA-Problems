@@ -1,0 +1,86 @@
+class Solution {
+    public int longestCommonSubsequence1(String text1, String text2) {
+        int l1 = text1.length();
+        int l2 = text2.length();
+        return solve1(text1, text2, l1, l2);
+    }
+    public static int solve1(String s1, String s2, int idx1, int idx2){
+        if(idx1 == 0 || idx2 == 0){
+            return 0;
+        }
+        if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
+            return 1 + solve1(s1, s2, idx1-1, idx2-1);
+        }
+        else{
+            return Math.max(solve1(s1, s2, idx1-1, idx2), solve1(s1, s2, idx1, idx2-1));
+        }
+    }
+    
+    //Memoization
+    static int longestCommonSubsequence(String text1, String text2) {
+        int l1 = text1.length();
+        int l2 = text2.length();
+        Integer[][] dp = new Integer[l1+1][l2+1];
+        return solve2(text1, text2, l1, l2, dp);
+    }
+    public static int solve2(String s1, String s2, int idx1, int idx2, Integer[][] dp){
+        if(idx1 == 0 || idx2 == 0){
+            return 0;
+        }
+        if(dp[idx1][idx2] != null){
+            return dp[idx1][idx2];
+        }
+        if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
+            return dp[idx1][idx2] = 1 + solve2(s1, s2, idx1-1, idx2-1, dp);
+        }
+        else{
+            return dp[idx1][idx2] = Math.max(solve2(s1, s2, idx1-1, idx2, dp), solve2(s1, s2, idx1, idx2-1, dp));
+        }
+    }
+    
+    //Tabulation
+    static int lcs3(String s1, String s2) {
+        int l1 = s1.length();
+        int l2 = s2.length();
+        int[][] dp = new int[l1+1][l2+1];
+        
+        for(int j=0; j<=l2; j++){
+            dp[0][j] = 0;
+        }
+        for(int i=1; i<=l1; i++){
+            for(int j=1; j<=l2; j++){
+                if(s1.charAt(i-1) == s2.charAt(j-1)){
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+                else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        return dp[l1][l2];
+    }
+    
+    //Space Optimization
+    static int lcs4(String s1, String s2) {
+        int l1 = s1.length();
+        int l2 = s2.length();
+        int[] prev = new int[l2+1];
+        int[] curr = new int[l2+1];
+        
+        for(int j=0; j<=l2; j++){
+            prev[j] = 0;
+        }
+        for(int i=1; i<=l1; i++){
+            for(int j=1; j<=l2; j++){
+                if(s1.charAt(i-1) == s2.charAt(j-1)){
+                    curr[j] = 1 + prev[j-1];
+                }
+                else{
+                    curr[j] = Math.max(prev[j], curr[j-1]);
+                }
+            }
+            prev = curr;
+        }
+        return prev[l2];
+    }
+}
