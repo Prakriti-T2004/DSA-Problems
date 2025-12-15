@@ -1,0 +1,85 @@
+class Solution {
+    // Recursion
+    public int cutRod1(int[] price) {
+        int n = price.length;
+        return solve1(price, n-1, n);
+    }
+    public int solve1(int[] price, int idx, int len){
+        if(idx == 0){
+            return price[0]*len;
+        }
+        int notTake = solve1(price, idx-1, len);
+        int take = (int)-1e9;
+        int rodlen = idx+1;
+        if(rodlen <= len){
+            take = price[idx] + solve1(price, idx, len-rodlen);
+        }
+        return Math.max(take, notTake);
+    }
+    
+    //Memoization
+    public int cutRod2(int[] price) {
+        int n = price.length;
+        Integer[][] dp = new Integer[n][n+1];
+        return solve2(price, n-1, n, dp);
+    }
+    public int solve2(int[] price, int idx, int len, Integer[][] dp){
+        if(idx == 0){
+            return price[0]*len;
+        }
+        if(dp[idx][len] != null){
+            return dp[idx][len];
+        }
+        int notTake = solve2(price, idx-1, len, dp);
+        int take = (int)-1e9;
+        int rodlen = idx+1;
+        if(rodlen <= len){
+            take = price[idx] + solve2(price, idx, len-rodlen, dp);
+        }
+        return dp[idx][len] = Math.max(take, notTake);
+    }
+    
+    //Tabulation
+    public int cutRod3(int[] price) {
+        int n = price.length;
+        Integer[][] dp = new Integer[n][n+1];
+        for(int len=0; len<=n; len++){
+            dp[0][len] = price[0] * len;
+        }
+        for(int idx=1; idx<n; idx++){
+            for(int len=0; len<=n; len++){
+                int notTake = dp[idx-1][len];
+                int take = (int)-1e9;
+                int rodlen = idx+1;
+                if(rodlen <= len){
+                    take = price[idx] + dp[idx][len-rodlen];
+                }
+                dp[idx][len] = Math.max(take, notTake);
+            }
+        }
+        return dp[n-1][n];
+    }
+    
+    //Space Optimization
+    public int cutRod(int[] price) {
+        int n = price.length;
+        int[] prev = new int[n+1];
+        int[] curr = new int[n+1];
+        for(int len=0; len<=n; len++){
+            prev[len] = price[0] * len;
+        }
+        for(int idx=1; idx<n; idx++){
+            for(int len=0; len<=n; len++){
+                int notTake = prev[len];
+                int take = (int)-1e9;
+                int rodlen = idx+1;
+                if(rodlen <= len){
+                    take = price[idx] + curr[len-rodlen];
+                }
+                curr[len] = Math.max(take, notTake);
+            }
+            prev = curr;
+        }
+        return prev[n];
+    }
+}
