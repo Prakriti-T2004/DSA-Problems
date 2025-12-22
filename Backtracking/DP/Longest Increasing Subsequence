@@ -1,0 +1,74 @@
+class Solution {
+    /*public int lengthOfLIS1(int[] nums) {
+        int n = nums.length;
+        return solve(nums, 0, -1);
+    }
+    public int solve(int[] nums, int i, int p){
+        if(i == nums.length){
+            return 0;
+        }
+        int take = Integer.MIN_VALUE;
+        if(p == -1 || nums[p] < nums[i]){
+            take = 1 + solve(nums, i+1, i);
+        }
+        int notTake = solve(nums, i+1, p);
+
+        return Math.max(take, notTake);
+    }*/
+
+    // Memoization
+    public int lengthOfLIS2(int[] nums) {
+        int n = nums.length;
+        Integer[][] dp = new Integer[n][n+1];
+        return solve(nums, 0, 0, dp);
+    }
+    public static int solve(int[] nums, int i, int p, Integer[][] dp){
+        if(i == nums.length){
+            return 0;
+        }
+        if(dp[i][p] != null){
+            return dp[i][p];
+        }
+        int take = Integer.MIN_VALUE;
+        if(p == 0 || nums[p-1] < nums[i]){
+            take = 1 + solve(nums, i+1, i+1, dp);
+        }
+        int notTake = solve(nums, i+1, p, dp);
+
+        return dp[i][p] = Math.max(take, notTake);
+    }
+
+    public int lengthOfLIS1(int[] nums) {
+        int n = nums.length;
+        int maxCount = Integer.MIN_VALUE;
+        int i=0;
+        while(i < n){
+            int count = 1;
+            for(int j=i+1; j<n; j++){
+                if(nums[i] < nums[j]){
+                    maxCount = Math.max(count, maxCount);
+                    i=j;
+                }
+            }
+        }
+        return maxCount;
+    }
+
+    // 1-D dp
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        int maxCount = 1;
+
+        for(int curr = 1; curr<n; curr++){
+            for(int prev=0; prev<curr; prev++){
+                if(nums[curr] > nums[prev] && dp[curr] < dp[prev]+1){
+                    dp[curr] = dp[prev] + 1;
+                    maxCount = Math.max(maxCount, dp[curr]);
+                }
+            }
+        }
+        return maxCount;
+    }
+}
