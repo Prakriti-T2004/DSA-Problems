@@ -1,0 +1,44 @@
+# GFG
+class Solution {
+    //Recursion
+    /*static int maxLength(String s) {
+        return solve(s, 0, -1);
+    }
+    static int solve(String s, int curr, int prev){
+        if(curr == s.length()){
+            return 0;
+        }
+        
+        int notTake = solve(s, curr+1, prev);
+        
+        int take = 0;
+        if(prev == -1 || s.charAt(curr)-'a' > s.charAt(prev)-'a'){
+            take = 1 + solve(s, curr+1, curr);
+        }
+        return Math.max(take, notTake);
+    }*/
+    
+    //Memoization
+    static int maxLength(String s) {
+        int n = s.length();
+        Integer[][] dp = new Integer[n][n+1];
+        return solve(s, 0, -1, dp);
+    }
+    static int solve(String s, int curr, int prev, Integer[][] dp){
+        if(curr == s.length()){
+            return 0;
+        }
+        
+        if(dp[curr][prev+1] != null){
+            return dp[curr][prev+1];
+        }
+        
+        int notTake = solve(s, curr+1, prev, dp);
+        
+        int take = 0;
+        if(prev == -1 || s.charAt(curr)-'a' > s.charAt(prev)-'a'){
+            take = 1 + solve(s, curr+1, curr, dp);
+        }
+        return dp[curr][prev+1] = Math.max(take, notTake);
+    }
+}
