@@ -1,0 +1,132 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class ClassyNumbers {
+    private static class FastScanner {
+        private final InputStream in;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private BufferedReader br;
+        private StringTokenizer st;
+
+        FastScanner(InputStream is) {
+            in = is;
+            br = new BufferedReader(new InputStreamReader(is));
+            st = new StringTokenizer("");
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0)
+                    return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        long nextLong() throws IOException {
+            int c;
+            do {
+                c = read();
+            } while (c <= ' ' && c != -1);
+
+            long sign = 1;
+            if (c == '-') {
+                sign = -1;
+                c = read();
+            }
+
+            long val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            do {
+                c = read();
+            } while (c <= ' ' && c != -1);
+
+            int sign = 1;
+            if (c == '-') {
+                sign = -1;
+                c = read();
+            }
+
+            int val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+
+        public String next() {
+            while (!st.hasMoreTokens()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        public char nextChar() throws IOException {
+            int c;
+            do {
+                c = read();
+            } while (c <= ' ' && c != -1);
+            return (char) c;
+        }
+    }
+
+   public static void main(String[] args) throws IOException {
+        FastScanner sc = new FastScanner(System.in);
+        int t = sc.nextInt();
+        while(t-- > 0){
+            long a, b;
+            a = sc.nextLong();
+            b = sc.nextLong();
+            String s = String.valueOf(b);
+            String r = String.valueOf(a-1);
+            Long[][][] dp1 = new Long[20][2][4];
+            Long[][][] dp2 = new Long[20][2][4];
+            long ans = solve(s, 0, 1, 0, dp1) - solve(r,0, 1, 0, dp2);
+            System.out.println(ans);
+        }
+    }
+
+    public static long solve(String s, int idx, int tight, int count, Long[][][] dp) {
+        if (count > 3) {
+            return 0;
+        }
+        if (idx == s.length()) {
+            return 1;
+        }
+        int lb = 0; // lowerbound
+        int ub = (tight == 1) ? (s.charAt(idx) - '0') : 9; // upperbound
+        long res = 0;
+        if (dp[idx][tight][count] != null) {
+            return dp[idx][tight][count];
+        }
+
+        for (int digit = lb; digit <= ub; digit++) {
+            int newTight = (tight == 1 && digit == ub) ? 1 : 0;
+
+            if (digit != 0) {
+                res += solve(s, idx + 1, newTight, count + 1, dp);
+            } else {
+                res += solve(s, idx + 1, newTight, count, dp);
+            }
+        }
+        return dp[idx][tight][count] = res;
+    }
+}
