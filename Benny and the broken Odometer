@@ -1,0 +1,45 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+//import for Scanner and other utility classes
+import java.util.*;
+
+
+// Warning: Printing unwanted or ill-formatted data to output will cause the test cases to fail
+
+class TestClass {
+    static Integer[][] dp;
+    public static void main(String args[] ) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while(t-- > 0){
+            int n = sc.nextInt();
+            String s = String.valueOf(n);
+            dp = new Integer[11][2];
+            System.out.println(solve(s, 0, 1) - 1);
+        }
+    }
+
+    public static int solve(String s, int idx, int tight){
+        if(idx == s.length()){
+            return 1;
+        }
+
+        int res = 0;
+        int lb = 0;
+        int ub = (tight == 1) ? s.charAt(idx) - '0' : 9;
+
+        if(dp[idx][tight] != null){
+            return dp[idx][tight];
+        }
+
+        for(int digit = lb; digit <= ub; digit++){
+            if(digit == 3){
+                continue;
+            }
+            int newTight = (tight == 1 && digit == ub) ? 1 : 0;
+            res += solve(s, idx+1, newTight);
+        }
+        return dp[idx][tight] = res;
+    }
+}
